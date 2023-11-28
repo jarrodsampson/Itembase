@@ -10,6 +10,10 @@ This Next.js 13 application serves as a custom REST API for managing items. It u
 - TypeScript: A superset of JavaScript that adds static types to the language.
 - ESLint: A pluggable linting utility for JavaScript and TypeScript.
 
+## Testing
+
+- Cypress: Used for end-to-end testing of the application.
+
 ## API Functionality
 
 The API provides the following key functionalities for managing items:
