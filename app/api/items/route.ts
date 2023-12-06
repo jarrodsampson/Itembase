@@ -67,10 +67,7 @@ export async function POST(req: NextRequest) {
     } catch (e: unknown) {
       if (e instanceof Error) {
         if (e.message.includes("Unique")) {
-          return NextResponse.json(
-            { error: "Duplicate Item detected" },
-            { status: 400 }
-          );
+          return NextResponse.json({ error: "Duplicate Item detected" }, { status: 400 });
         } else {
           throw e;
         }
@@ -84,10 +81,7 @@ export async function POST(req: NextRequest) {
       await prisma.$disconnect();
     }
   } else {
-    return NextResponse.json(
-      { error: "Invalid request: Missing item name" },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: "Invalid request: Missing item name" }, { status: 400 });
   }
 }
 
@@ -108,15 +102,9 @@ export async function DELETE(req: NextRequest) {
     });
 
     if (deleteResult.count > 0) {
-      return NextResponse.json(
-        { message: "Items Successfully Deleted." },
-        { status: 200 }
-      );
+      return NextResponse.json({ message: "Items Successfully Deleted." }, { status: 200 });
     } else {
-      return NextResponse.json(
-        { error: "No items found to delete" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "No items found to delete" }, { status: 404 });
     }
   } catch (e: unknown) {
     return NextResponse.json(
@@ -145,15 +133,9 @@ export async function PATCH(req: NextRequest) {
     });
 
     if (updateUsers.count > 0) {
-      return NextResponse.json(
-        { message: "Items Successfully Updated." },
-        { status: 200 }
-      );
+      return NextResponse.json({ message: "Items Successfully Updated." }, { status: 200 });
     } else {
-      return NextResponse.json(
-        { error: "No items found to update" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "No items found to update" }, { status: 404 });
     }
   } catch (e: unknown) {
     return NextResponse.json(
