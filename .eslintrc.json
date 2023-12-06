@@ -1,7 +1,7 @@
 {
   "extends": "next/core-web-vitals",
   "rules": {
-    "indent": ["error", 2],
+    // "indent": ["error", 2],
     "no-mixed-spaces-and-tabs": "error",
     "snake_case": "off",
     "quotes": ["error", "double"],

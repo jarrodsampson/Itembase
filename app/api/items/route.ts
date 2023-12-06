@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import { createRedisInstance } from "../../../redis";
 
 const prisma = new PrismaClient();
 
@@ -7,6 +8,19 @@ export async function GET(req: NextRequest) {
   const limit = req.nextUrl.searchParams.get("limit");
   const offset = req.nextUrl.searchParams.get("offset");
   const search = req.nextUrl.searchParams.get("search");
+
+  // get redis instance ready
+  const redis = createRedisInstance();
+
+  // try fetch cached data
+  const key = `request-${limit}-${offset}-${search}`;
+  const cached = await redis.get(key);
+  // if cached, we're good!
+  if (cached) {
+    return NextResponse.json(JSON.parse(cached), {
+      status: 200,
+    });
+  }
 
   try {
     let items = [];
@@ -33,12 +47,18 @@ export async function GET(req: NextRequest) {
       total = await prisma.item.count();
     }
 
-    return NextResponse.json(
-      { items, total },
-      {
-        status: 200,
-      }
-    );
+    let payload = { items, total };
+
+    // if not in let's cache this data
+    const MAX_AGE = 15 * 1000; // every 15 seconds
+    const EXPIRY_MS = "PX"; // milliseconds
+
+    // cache data
+    await redis.set(key, JSON.stringify(payload), EXPIRY_MS, MAX_AGE);
+
+    return NextResponse.json(payload, {
+      status: 200,
+    });
   } catch (e: unknown) {
     return NextResponse.json(
       {
