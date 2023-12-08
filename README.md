@@ -10,6 +10,11 @@ This Next.js 13 application serves as a custom REST API for managing items. It u
 - TypeScript: A superset of JavaScript that adds static types to the language.
 - ESLint: A pluggable linting utility for JavaScript and TypeScript.
 
+## Cache and Rate Limiting
+
+- Redis: Utilized as a distributed cache to enhance performance and scalability.
+- Rate Limiter: Implements a basic rate limiter to control the frequency of API requests.
+
 ## Testing
 
 - Cypress: Used for end-to-end testing of the application.
