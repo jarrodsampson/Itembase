@@ -4,7 +4,26 @@ import { createRedisInstance } from "../../../redis";
 
 const prisma = new PrismaClient();
 
+const DEFAULT_OFFSET = 0;
+const DEFAULT_LIMIT = 10;
+
 export async function GET(req: NextRequest) {
+  return searchItems(req);
+}
+
+export async function POST(req: NextRequest) {
+  return createItem(req);
+}
+
+export async function DELETE(req: NextRequest) {
+  return deleteItems(req);
+}
+
+export async function PATCH(req: NextRequest) {
+  return updateItems(req);
+}
+
+const searchItems = async (req: NextRequest) => {
   const limit = req.nextUrl.searchParams.get("limit");
   const offset = req.nextUrl.searchParams.get("offset");
   const search = req.nextUrl.searchParams.get("search");
@@ -31,8 +50,8 @@ export async function GET(req: NextRequest) {
       },
     };
     items = await prisma.item.findMany({
-      skip: Number(offset) || 0,
-      take: Number(limit) || 10,
+      skip: Number(offset) || DEFAULT_OFFSET,
+      take: Number(limit) || DEFAULT_LIMIT,
       where,
     });
     total = await prisma.item.count({
@@ -41,8 +60,8 @@ export async function GET(req: NextRequest) {
     if (search) {
     } else {
       items = await prisma.item.findMany({
-        skip: Number(offset) || 0,
-        take: Number(limit) || 10,
+        skip: Number(offset) || DEFAULT_OFFSET,
+        take: Number(limit) || DEFAULT_LIMIT,
       });
       total = await prisma.item.count();
     }
@@ -71,9 +90,9 @@ export async function GET(req: NextRequest) {
   } finally {
     await prisma.$disconnect();
   }
-}
+};
 
-export async function POST(req: NextRequest) {
+const createItem = async (req: NextRequest) => {
   const { name, message } = await req.json();
   if (name) {
     try {
@@ -103,9 +122,9 @@ export async function POST(req: NextRequest) {
   } else {
     return NextResponse.json({ error: "Invalid request: Missing item name" }, { status: 400 });
   }
-}
+};
 
-export async function DELETE(req: NextRequest) {
+const deleteItems = async (req: NextRequest) => {
   try {
     const { itemIds } = await req.json();
     // check for validity first
@@ -134,9 +153,9 @@ export async function DELETE(req: NextRequest) {
   } finally {
     await prisma.$disconnect();
   }
-}
+};
 
-export async function PATCH(req: NextRequest) {
+const updateItems = async (req: NextRequest) => {
   try {
     const { itemIds, message } = await req.json();
 
@@ -165,4 +184,4 @@ export async function PATCH(req: NextRequest) {
   } finally {
     await prisma.$disconnect();
   }
-}
+};
