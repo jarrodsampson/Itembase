@@ -3,17 +3,23 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export async function GET(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
-  const { id } = params;
-  const itemId = id as string;
+export async function GET(req: Request, { params }: { params: { id: string } }) {
+  return getItem(params.id);
+}
 
+export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+  return deleteItem(params.id);
+}
+
+export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+  return updateItem(req, params.id);
+}
+
+const getItem = async (id: string) => {
   try {
     const userSearch = await prisma.item.findUnique({
       where: {
-        id: parseInt(itemId, 10),
+        id: parseInt(id, 10),
       },
     });
     if (userSearch) {
@@ -33,27 +39,18 @@ export async function GET(
   } finally {
     await prisma.$disconnect();
   }
-}
+};
 
-export async function DELETE(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
-  const { id } = params;
-  const itemId = id as string;
-
+const deleteItem = async (id: string) => {
   try {
     const userDelete = await prisma.item.delete({
       where: {
-        id: parseInt(itemId, 10),
+        id: parseInt(id, 10),
       },
     });
 
     if (userDelete) {
-      return NextResponse.json(
-        { message: "Item successfully deleted" },
-        { status: 200 }
-      );
+      return NextResponse.json({ message: "Item successfully deleted" }, { status: 200 });
     } else {
       return NextResponse.json({ error: "Item not found" }, { status: 404 });
     }
@@ -65,21 +62,14 @@ export async function DELETE(
   } finally {
     await prisma.$disconnect();
   }
-}
+};
 
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  const { id } = params;
+const updateItem = async (req: Request, id: string) => {
   try {
     const { name, message } = await req.json();
 
     if (!name) {
-      NextResponse.json(
-        { error: "Invalid request: Missing item name" },
-        { status: 400 }
-      );
+      NextResponse.json({ error: "Invalid request: Missing item name" }, { status: 400 });
       return;
     }
 
@@ -108,4 +98,4 @@ export async function PATCH(
   } finally {
     await prisma.$disconnect();
   }
-}
+};
