@@ -1,0 +1,27 @@
+name: Cypress Component Tests
+on: push
+jobs:
+  cypress-run:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set Up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      - name: Install Dependencies
+        run: npm i
+
+      - name: Run Server
+        run: npm run dev &
+
+      - name: Wait for Server to Start
+        run: sleep 10
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          component: true
