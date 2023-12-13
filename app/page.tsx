@@ -1,7 +1,9 @@
 export default function Home() {
   return (
     <main className="max-w-2xl mx-auto mt-8 mb-8 p-8 bg-white rounded shadow-md">
-      <h1 className="text-4xl font-bold text-gray-800 mb-6">Itembase</h1>
+      <h1 data-cy="main-title" className="text-4xl font-bold text-gray-800 mb-6">
+        Itembase
+      </h1>
 
       <p className="text-gray-700 mb-8">
         This Next.js 13 application serves as a custom REST API for managing items. It utilizes
@@ -85,7 +87,7 @@ export default function Home() {
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">License</h2>
         <p className="text-gray-700">
           This project is licensed under the{" "}
-          <a href="LICENSE" className="text-blue-500">
+          <a data-cy="license-link" href="/license" className="text-blue-500">
             MIT License
           </a>
           .
