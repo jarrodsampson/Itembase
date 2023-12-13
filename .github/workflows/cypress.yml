@@ -10,7 +10,7 @@ jobs:
       - name: Set Up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "14"
+          node-version: "17"
 
       - name: Install Dependencies
         run: npm i
